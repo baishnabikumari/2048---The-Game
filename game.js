@@ -121,7 +121,7 @@ for (let i = 0; i < 16; i++){
 function render(spawnPos){
     tilesEl.innerHTML = '';
     for (let r = 0; r < 4; r++){
-        for(let c = 0; c < 4, c++){
+        for(let c = 0; c < 4; c++){
             const v = grid[r][c];
             if(!v) continue;
 
