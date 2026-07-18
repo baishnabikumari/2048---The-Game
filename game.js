@@ -66,3 +66,85 @@ function slideRow(row){
     while (out.length < 4) out.push(0);
     return { out, pts };
 }
+
+// helper - turn the col into rows so to reuse slideRow
+const tp = m => m[0].map((_, c) => m.map(r => r[c]));
+
+function applyDir(g, dir){
+    let pts = 0;
+    const rows = m => m.map(row => {
+        const { out, pts: p } = slideRow(row);
+        pts += p;
+        return out;
+    });
+
+    let b = g.map(r => [...r]);
+
+    if(dir === 'left') b = rows(b);
+    if(dir === 'right') b = rows(b.map(r => [...r].reverse())).map(r => r.reverse());
+    if(dir === 'up') b = tp(rows(tp(b)));
+    if(dir === 'down') b = tp(rows(tp(b).map(r => [...r].reverse())).map(r => r.reverse()));
+
+    return {b, pts};
+}
+
+function isStuck(g){
+    if(g.some(r => r.some(v => !v))) return false;
+    for (let r = 0; r < 4; r++){
+        for (let c = 0; c < 4; c++){
+            if(c < 3 && g[r][c] === g[r][c + 1]) return false;
+            if(r < 3 && g[r][c] === g[r + 1][c]) return false;
+        }
+    }
+    return true;
+}
+
+const CELL = Math.floor(Math.min(80, (window.innerWidth - 82) / 4));
+const GAP = 10;
+
+document.documentElement.style.setProperty('--cell', CELL + 'px');
+document.documentElement.style.setProperty('--gap', GAP + 'px');
+
+const cellsEl = document.getElementById('cells');
+const tilesEl = document.getElementById('tiles');
+const scoreEl = document.getElementById('score');
+const bestEl = document.getElementById('best');
+const overEl = document.getElementById('gameover');
+
+// 16 empty bg cells at once
+for (let i = 0; i < 16; i++){
+    const d = document.createElement('div');
+    d.className = 'cell';
+    cellsEl.appendChild(d);
+}
+
+function render(spawnPos){
+    tilesEl.innerHTML = '';
+    for (let r = 0; r < 4; r++){
+        for(let c = 0; c < 4, c++){
+            const v = grid[r][c];
+            if(!v) continue;
+
+            const el = document.createElement('div');
+            el.className = 'tile';
+            if(spawnPos && spawnPos[0] === r && spawnPos[1] === c){
+                el.classList.add('new');
+            }
+
+            el.style.cssText = [
+                `left:${c * (CELL + GAP)}px`,
+                `top:${r * (CELL + GAP)}px`,
+                `width:${CELL}px`,
+                `height:${CELL}px`,
+                `background:${bgFor(v)}`,
+                `color:${fgFor(v)}`,
+                `font-size:${fsFor(v, CELL)}px`,
+            ].join(';');
+
+            el.textContent = v;
+            tilesEl.appendChild(el)
+        }
+    }
+    scoreEl.textContent = score;
+    bestEl.textContent = best;
+}
