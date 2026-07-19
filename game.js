@@ -130,6 +130,7 @@ function isStuck(g){
 
 const CELL = Math.floor(Math.min(80, (window.innerWidth - 82) / 4));
 const GAP = 10;
+let inputMode = localStorage.getItem('2048e-mode') || 'both';
 
 document.documentElement.style.setProperty('--cell', CELL + 'px');
 document.documentElement.style.setProperty('--gap', GAP + 'px');
@@ -178,6 +179,15 @@ function render(spawnPos){
     bestEl.textContent = best;
 }
 
+function updateModeBtn(){
+    const btn = document.getElementById('btn-mode');
+    if(!btn) return;
+    btn.textContent = inputMode;
+    document.querySelectorAll('.mopt').forEach(b => {
+        b.classList.toggle('active', b.dataset.m === inputMode);
+    });
+}
+
 // game state
 let grid, score, best;
 
@@ -192,6 +202,8 @@ function start(){
 }
 
 function move(dir){
+    const overlay = document.getElementById('howto');
+    if(overlay && !overlay.classList.contains('hidden')) return;
     const {b, pts} = applyDir(grid, dir);
     if(JSON.stringify(b) === JSON.stringify(grid)) return;
 
@@ -215,6 +227,7 @@ const KEYS = {
 };
 
 document.addEventListener('keydown', e => {
+    if(inputMode === 'swipe') return;
     if(!KEYS[e.key]) return;
     e.preventDefault();
     move(KEYS[e.key]);
@@ -224,11 +237,16 @@ document.addEventListener('keydown', e => {
 let t0 = null;
 
 document.getElementById('board').addEventListener('touchstart', e => {
+    if(inputMode === 'arr') return;
     t0 = [e.touches[0].clientX, e.touches[0].clientY];
 }, { passive: true });
 
+document.getElementById('board').addEventListener('touchmove', e => {
+    e.preventDefault();
+}, {passive: false});
+
 document.getElementById('board').addEventListener('touchend', e => {
-    if(!t0) return;
+    if(inputMode === 'arr' || !t0) return;
     const dx = e.changedTouches[0].clientX - t0[0];
     const dy = e.changedTouches[0].clientY - t0[1];
     t0 = null;
@@ -238,8 +256,32 @@ document.getElementById('board').addEventListener('touchend', e => {
         : (dy > 0 ? 'down' : 'up'));
 });
 
+let lastWheel = 0;
+document.getElementById('board').addEventListener('wheel', e => {
+    e.preventDefault();
+    if(inputMode === 'arr') return;
+    if(Math.max(Math.abs(e.deltaX), Math.abs(e.deltaY)) < 30) return;
+    const now = Date.now();
+    if(now - lastWheel < 320) return;
+    lastWheel = now
+    if(Math.abs(e.deltaX) > Math.abs(e.deltaY)){
+        move(e.deltaX > 0 ? 'left' : 'right');
+    } else {
+        move(e.deltaY > 0 ? 'up' : 'down');
+    }
+}, {passive: false});
+
 document.getElementById('btn-new').onclick = start;
 document.getElementById('btn-retry').onclick = start;
+
+document.querySelectorAll('.mopt').forEach(b => {
+    b.addEventListener('click', () => {
+        inputMode = b.dataset.m;
+        localStorage.setItem('2048e-mode', inputMode);
+        updateModeBtn();
+    });
+});
+updateModeBtn();
 
 // kick off
 start();
