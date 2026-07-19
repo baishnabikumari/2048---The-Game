@@ -35,9 +35,10 @@ body{
 
 header{
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
     width: var(--board);
+    gap: 10px;
 }
 
 .brand h1{
@@ -60,7 +61,8 @@ header{
 .hud{
     display: flex;
     gap: 8px;
-    align-items: flex-start;
+    align-items: stretch;
+    width: 100%;
 }
 
 .sbox{
@@ -70,6 +72,7 @@ header{
     padding: 7px 14px;
     min-width: 64px;
     text-align: center;
+    flex: 1;
 }
 
 .slabel{
@@ -101,13 +104,28 @@ button {
     transition: background 0.1s;
 }
 
+#btn-theme{
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 17px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 button:hover {
     background: #2a2a2a;
 }
 
-#btn-new{
+/* #btn-new{
     align-self: stretch;
-}
+} */
 
 #board{
     position: relative;
