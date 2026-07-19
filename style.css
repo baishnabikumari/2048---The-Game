@@ -191,3 +191,29 @@ button:hover {
     letter-spacing: 0.3px;
     margin-top: 4px;
 }
+
+[data-theme="light"]{
+    --bg: #f5f0e8;
+    --board-bg: #e8e0d4;
+    --cell-bg: #d4ccc0;
+    --text: #2a2420;
+    --muted: #9a9088;
+}
+
+[data-theme="light"].sbox{
+    border-color: #ccc4b8;
+}
+
+[data-theme="light"] button{
+    background: #e0d8cc;
+    border-color: #ccc4b8;
+    color: #2a2420;
+}
+
+[data-theme="light"] button:hover{
+    background: #d4ccc0;
+}
+
+[data-theme="light"] .brand h1{
+    color: #a07818;
+}
