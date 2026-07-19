@@ -219,7 +219,7 @@ button:hover {
     --muted: #9a9088;
 }
 
-[data-theme="light"].sbox{
+[data-theme="light"] .sbox{
     border-color: #ccc4b8;
 }
 
@@ -259,7 +259,7 @@ button:hover {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-#move-wrap:hover #mode-opts{
+#mode-wrap:hover #mode-opts{
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
@@ -268,6 +268,16 @@ button:hover {
 #mode-wrap:hover .mopt:nth-child(1) { transition-delay: 0.05s; }
 #mode-wrap:hover .mopt:nth-child(2) { transition-delay: 0.1s;}
 #mode-wrap:hover .mopt:nth-child(3) { transition-delay: 0.15s;}
+
+.mopt{
+    width: 44px;
+    height: 40px;
+    padding: 0;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
 
 /* gold highlight */
 .mopt.active{
@@ -288,6 +298,6 @@ button:hover {
 
 [data-theme="light"] .mopt.active{
     background: #a07818;
-    border-color: #a07188;
+    border-color: #a07818;
     color: #fff;
 }

@@ -9,7 +9,7 @@ function applyTheme(t){
     localStorage.setItem('2048e-theme', t);
     const btn = document.getElementById('btn-theme');
     //icon shows what to switch to
-    btn.textContent = t === 'dark' ? '☀' : '☾';
+    if(btn) btn.textContent = t === 'dark' ? '☀' : '☾';
     if(typeof render === 'function') render(null);
 }
 

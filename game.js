@@ -196,9 +196,9 @@ function start(){
     score = 0;
     best = +localStorage.getItem('2048e-best') || 0;
     addRandoms(grid);
-    const spawn = addRandoms(grid);
+    addRandoms(grid);
     overEl.classList.add('hidden');
-    render(spawn);
+    render(null);
 }
 
 function move(dir){
