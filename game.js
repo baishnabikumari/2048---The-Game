@@ -1,4 +1,4 @@
-const TILE_BG = {
+const TILE_DARK = {
     1: '#282828',
     2: '#2d2822',
     3: '#7a3e12',
@@ -17,12 +17,41 @@ const TILE_BG = {
     16: '#901818',
 };
 
+// light theme palette
+const TILE_LIGHT = {
+    1: '#cdc5b8',
+    2: '#b8a888',
+    3: '#7a3e12',
+    4: '#934814',
+    5: '#a84e1a',
+    6: '#b83820',
+    7: '#7a6012',
+    8: '#9a7a10',
+    9: '#b89010',
+    10: '#5a38a0',
+    11: '#c8a830',
+    12: '#147878',
+    13: '#882060',
+    14: '#183890',
+    15: '#1e8040',
+    16: '#901818',
+};
+
 function bgFor(v){
-    return TILE_BG[Math.log2(v)] || '#602080';
+    const map = document.documentElement.dataset.theme === 'light'
+        ? TILE_LIGHT
+        : TILE_DARK;
+    return map[Math.log2(v)] || '#602080';
 }
 
 function fgFor(v){
-    return v <= 4 ? '#807060' : '#f0e8dc';
+    // low tiles on light theme board need to get darker contract text.
+    if(v <= 4){
+        return document.documentElement.dataset.theme === 'light'
+            ? '#5a4838'
+            : '#807060';
+    }
+    return '#f0e8dc';
 }
 
 function fsFor(v, cell){
