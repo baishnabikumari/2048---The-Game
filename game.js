@@ -21,7 +21,7 @@ function bgFor(v){
     return TILE_BG[Math.log2(v)] || '#602080';
 }
 
-function fgfor(v){
+function fgFor(v){
     return v <= 4 ? '#807060' : '#f0e8dc';
 }
 
@@ -148,3 +148,69 @@ function render(spawnPos){
     scoreEl.textContent = score;
     bestEl.textContent = best;
 }
+
+// game state
+let grid, score, best;
+
+function start(){
+    grid = make4x4();
+    score = 0;
+    best = +localStorage.getItem('2048e-best') || 0;
+    addRandoms(grid);
+    const spawn = addRandoms(grid);
+    overEl.classList.add('hidden');
+    render(spawn);
+}
+
+function move(dir){
+    const {b, pts} = applyDir(grid, dir);
+    if(JSON.stringify(b) === JSON.stringify(grid)) return;
+
+    grid = b;
+    score += pts;
+    if(score > best){
+        best = score;
+        localStorage.setItem('2048e-best', best);
+    }
+    const spawn = addRandoms(grid);
+    render(spawn);
+
+    if(isStuck(grid)) overEl.classList.remove('hidden');
+}
+
+const KEYS = {
+    ArrowLeft: 'left',
+    ArrowRight: 'right',
+    ArrowUp: 'up',
+    ArrowDown: 'down',
+};
+
+document.addEventListener('keydown', e => {
+    if(!KEYS[e.key]) return;
+    e.preventDefault();
+    move(KEYS[e.key]);
+});
+
+//swipe
+let t0 = null;
+
+document.getElementById('board').addEventListener('touchstart', e => {
+    t0 = [e.touches[0].clientX, e.touches[0].clientY];
+}, { passive: true });
+
+document.getElementById('board').addEventListener('touchend', e => {
+    if(!t0) return;
+    const dx = e.changedTouches[0].clientX - t0[0];
+    const dy = e.changedTouches[0].clientY - t0[1];
+    t0 = null;
+    if(Math.max(Math.abs(dx), Math.abs(dy)) < 28) return;
+    move(Math.abs(dx) > Math.abs(dy)
+        ? (dx > 0 ? 'right' : 'left')
+        : (dy > 0 ? 'down' : 'up'));
+});
+
+document.getElementById('btn-new').onclick = start;
+document.getElementById('btn-retry').onclick = start;
+
+// kick off
+start();
