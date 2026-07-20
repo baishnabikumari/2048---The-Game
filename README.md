@@ -33,8 +33,10 @@ git clone (repo link)
 cd (folder)
 
 Opent the .html file with live server.
-                 OR
+            OR
 python3 -m http.server 8000
+
+And then visit the `http://localhost:8000`
 ```
 
 ## How it work tho.
