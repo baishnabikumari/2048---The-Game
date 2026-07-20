@@ -42,7 +42,7 @@ the whole game revolves around the endless mechanic:-
 
 # File structure.
 
-
+<img width="188" height="170" alt="Screenshot 2026-07-20 at 2 10 52 PM" src="https://github.com/user-attachments/assets/c9167ed4-703c-4355-b6f5-fd5834965218" />
 
 ## Run it locally
 ```bash
